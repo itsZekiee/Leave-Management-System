@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './features/auth/components/LoginForm';
 import AdminDashboard from './features/admin/pages/AdminDashboard';
+import LeaveRequests from './features/admin/pages/LeaveRequests';
 import { useAuth } from './features/auth/hooks/useAuth';
 
 const ProtectedRoute = ({ children, isAdminRequired = false }) => {
@@ -33,6 +34,15 @@ function App() {
           element={
             <ProtectedRoute isAdminRequired={true}>
               <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/admin/leave-requests" 
+          element={
+            <ProtectedRoute isAdminRequired={true}>
+              <LeaveRequests />
             </ProtectedRoute>
           } 
         />

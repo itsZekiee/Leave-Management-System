@@ -23,6 +23,11 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
+    public function leaveRequests(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

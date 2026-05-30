@@ -6,14 +6,14 @@ import { useAuth } from '../hooks/useAuth';
  * Skill: Component Architecture & UI/UX
  */
 const LoginForm = () => {
-  const [corporateId, setCorporateId] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(corporateId, password);
+    await login(loginId, password);
   };
 
   return (
@@ -48,13 +48,13 @@ const LoginForm = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Corporate ID</label>
+                <label className="block text-sm font-medium text-gray-700">Corporate ID or Email</label>
                 <input
                   type="text"
                   required
-                  value={corporateId}
-                  onChange={(e) => setCorporateId(e.target.value)}
-                  placeholder="ad-xxxx-xxx-xx"
+                  value={loginId}
+                  onChange={(e) => setLoginId(e.target.value)}
+                  placeholder="ad-xxxx-xxx-xx or email@example.com"
                   className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500 transition-colors"
                 />
               </div>

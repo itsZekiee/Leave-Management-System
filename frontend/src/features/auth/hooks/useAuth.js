@@ -9,7 +9,7 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const login = async (corporateId, password) => {
+  const login = async (loginId, password) => {
     setLoading(true);
     setError(null);
     try {
@@ -19,27 +19,23 @@ export const useAuth = () => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ corporate_id: corporateId, password }),
+        body: JSON.stringify({ login_id: loginId, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || data.errors?.login_id?.[0] || 'Login failed');
       }
 
-      const { user, access_token } = data.data;
+      const { user, access_token, redirect } = data;
       
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
 
-      // Role-Based Routing logic (to be handled in components or router)
-      if (user.corporate_id.startsWith('ad-')) {
-        window.location.href = '/admin/dashboard';
-      } else {
-        window.location.href = '/employee/dashboard';
-      }
+      // Use the redirect provided by the backend
+      window.location.href = redirect;
 
       return data;
     } catch (err) {
