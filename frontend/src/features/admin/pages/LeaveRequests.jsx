@@ -3,7 +3,8 @@ import { useAuth } from '../../auth/hooks/useAuth';
 import { 
   Search, Filter, Calendar, Download, CheckCircle, XCircle, 
   Clock, Check, X, ChevronLeft, ChevronRight, MoreHorizontal,
-  AlertCircle, Users, LayoutDashboard, FileText, Settings, LogOut, Menu
+  AlertCircle, Users, LayoutDashboard, FileText, Settings, LogOut, Menu,
+  HelpCircle, ShieldCheck
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -130,37 +131,53 @@ const LeaveRequests = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white font-montserrat">
+    <div className="flex h-screen bg-gray-50/50 overflow-hidden font-montserrat text-gray-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col hidden lg:flex fixed h-full">
-        <div className="p-8 border-b border-slate-800">
-          <div className="flex items-center space-x-3">
-            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-primary/20">V</div>
-            <h2 className="text-xl font-poppins font-bold tracking-tight">VR LMS</h2>
+      <aside className="w-72 bg-white border-r border-gray-100 flex flex-col z-20">
+        <div className="p-8">
+          <div className="flex flex-col space-y-1">
+            <h2 className="text-xl font-poppins font-black text-gray-900 tracking-tight">VR-LMS Admin</h2>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Management Console</p>
           </div>
         </div>
-        <nav className="flex-1 p-6 space-y-2">
-          <Link to="/admin/dashboard" className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl font-semibold transition-all ${location.pathname === '/admin/dashboard' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}>
-            <LayoutDashboard size={20} />
-            <span>Dashboard</span>
-          </Link>
-          <Link to="/admin/leave-requests" className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl font-semibold transition-all ${location.pathname === '/admin/leave-requests' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}>
-            <FileText size={20} />
-            <span>Leave Requests</span>
-          </Link>
-          <NavItem icon={<Users size={20} />} label="Employee Directory" />
-          <NavItem icon={<Settings size={20} />} label="Admin Settings" />
+
+        <nav className="flex-1 px-4 space-y-2">
+          <SidebarLink 
+            to="/admin/dashboard" 
+            icon={<LayoutDashboard size={22}/>} 
+            label="Dashboard" 
+            active={location.pathname === '/admin/dashboard'} 
+          />
+          <SidebarLink 
+            to="/admin/leave-requests" 
+            icon={<FileText size={22} />} 
+            label="Leave Requests" 
+            active={location.pathname === '/admin/leave-requests'} 
+          />
+          <SidebarLink icon={<Calendar size={22} />} label="Team Calendar" />
+          <SidebarLink icon={<Users size={22} />} label="Employee Directory" />
+          <SidebarLink icon={<Settings size={22} />} label="Admin Settings" />
         </nav>
-        <div className="p-6 mt-auto border-t border-slate-800">
-          <button onClick={logout} className="flex items-center space-x-3 text-slate-400 hover:text-white transition-colors w-full px-4 py-3">
-            <LogOut size={20} />
-            <span className="font-semibold">Logout</span>
+
+        <div className="p-6 space-y-6">
+          <button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center space-x-2">
+            <span className="text-xl">+</span>
+            <span>New Request</span>
           </button>
+
+          <div className="space-y-2 pt-4 border-t border-gray-50">
+            <SecondaryNavLink icon={<HelpCircle size={20} />} label="Help Center" />
+            <SecondaryNavLink icon={<ShieldCheck size={20} />} label="Privacy Policy" />
+            <button onClick={logout} className="w-full flex items-center space-x-4 px-4 py-3 text-gray-500 hover:text-red-600 transition-colors group">
+              <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+              <span className="font-bold text-sm">Logout</span>
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-64 p-8">
+      <main className="flex-1 overflow-y-auto p-8">
         <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-poppins font-bold text-gray-900">Leave Requests</h1>
@@ -406,12 +423,52 @@ const LeaveRequests = () => {
   );
 };
 
+// --- Sub-components ---
+
+const SidebarLink = ({ to, icon, label, active = false }) => {
+  const content = (
+    <>
+      <div className={`transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
+        {icon}
+      </div>
+      <span className="font-bold text-sm tracking-wide">{label}</span>
+    </>
+  );
+
+  const baseClasses = `flex items-center space-x-4 px-6 py-4 rounded-xl transition-all group`;
+  const activeClasses = `bg-green-50 text-green-600 border-r-4 border-green-600 rounded-r-none`;
+  const inactiveClasses = `text-gray-400 hover:bg-gray-50 hover:text-gray-900`;
+
+  if (to) {
+    return (
+      <Link to={to} className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}>
+      {content}
+    </button>
+  );
+};
+
+const SecondaryNavLink = ({ icon, label }) => (
+  <button className="w-full flex items-center space-x-4 px-4 py-3 text-gray-400 hover:text-gray-900 transition-colors group">
+    <div className="group-hover:scale-110 transition-transform">
+      {icon}
+    </div>
+    <span className="font-bold text-sm">{label}</span>
+  </button>
+);
+
 const NavItem = ({ icon, label, active = false, onClick }) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl font-semibold transition-all ${active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}
+    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all border ${active ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-600/20' : 'bg-white text-gray-500 border-gray-100 hover:bg-gray-50'}`}
   >
-    {icon}
+    {icon && <span className="opacity-70">{icon}</span>}
     <span>{label}</span>
   </button>
 );

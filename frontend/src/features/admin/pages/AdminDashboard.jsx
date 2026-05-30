@@ -5,7 +5,8 @@ import {
 } from 'recharts';
 import { 
   Bell, Search, Filter, Calendar, Check, X, LogOut, 
-  Users, Clock, AlertTriangle, FileText, ChevronRight, LayoutDashboard, Settings
+  Users, Clock, AlertTriangle, FileText, ChevronRight, LayoutDashboard, Settings,
+  HelpCircle, ShieldCheck, PlusCircle
 } from 'lucide-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
@@ -81,44 +82,57 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden font-montserrat">
+    <div className="flex h-screen bg-gray-50/50 overflow-hidden font-montserrat text-gray-900">
       {/* Sidebar Navigation Panel */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col z-20 shadow-xl">
-        <div className="p-8 border-b border-slate-800">
-          <div className="flex items-center space-x-3">
-            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-primary/20">V</div>
-            <h2 className="text-xl font-poppins font-bold tracking-tight">VR LMS</h2>
+      <aside className="w-72 bg-white border-r border-gray-100 flex flex-col z-20">
+        <div className="p-8">
+          <div className="flex flex-col space-y-1">
+            <h2 className="text-xl font-poppins font-black text-gray-900 tracking-tight">VR-LMS Admin</h2>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Management Console</p>
           </div>
         </div>
-        <nav className="flex-1 p-6 space-y-4 font-montserrat">
-          <Link to="/admin/dashboard" className={`flex items-center space-x-4 p-4 rounded-2xl transition-all group ${location.pathname === '/admin/dashboard' ? 'bg-green-600/10 text-green-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <LayoutDashboard size={20}/>
-            <span className="font-bold text-sm tracking-wide">Dashboard</span>
-          </Link>
-          <Link to="/admin/leave-requests" className={`flex items-center space-x-4 p-4 rounded-2xl transition-all group ${location.pathname === '/admin/leave-requests' ? 'bg-green-600/10 text-green-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <FileText size={20} />
-            <span className="font-bold text-sm tracking-wide">Leave Requests</span>
-          </Link>
-          <NavItem icon={<Users size={20} />} label="Directory" />
-          <NavItem icon={<Settings size={20} />} label="Admin Settings" />
+
+        <nav className="flex-1 px-4 space-y-2">
+          <SidebarLink 
+            to="/admin/dashboard" 
+            icon={<LayoutDashboard size={22}/>} 
+            label="Dashboard" 
+            active={location.pathname === '/admin/dashboard'} 
+          />
+          <SidebarLink 
+            to="/admin/leave-requests" 
+            icon={<FileText size={22} />} 
+            label="Leave Requests" 
+            active={location.pathname === '/admin/leave-requests'} 
+          />
+          <SidebarLink icon={<Calendar size={22} />} label="Team Calendar" />
+          <SidebarLink icon={<Users size={22} />} label="Employee Directory" />
+          <SidebarLink icon={<Settings size={22} />} label="Admin Settings" />
         </nav>
-        <div className="p-6 mt-auto border-t border-slate-800">
-          <button onClick={logout} className="w-full flex items-center space-x-3 text-slate-400 hover:text-white transition-colors px-4 py-3">
-            <LogOut size={20} />
-            <span className="font-semibold font-montserrat">Logout</span>
+
+        <div className="p-6 space-y-6">
+          <button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center space-x-2">
+            <span className="text-xl">+</span>
+            <span>New Request</span>
           </button>
+
+          <div className="space-y-2 pt-4 border-t border-gray-50">
+            <SecondaryNavLink icon={<HelpCircle size={20} />} label="Help Center" />
+            <SecondaryNavLink icon={<ShieldCheck size={20} />} label="Privacy Policy" />
+            <button onClick={logout} className="w-full flex items-center space-x-4 px-4 py-3 text-gray-500 hover:text-red-600 transition-colors group">
+              <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+              <span className="font-bold text-sm">Logout</span>
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto relative">
         {/* Top Header */}
-        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+        <header className="bg-white px-8 py-5 flex items-center justify-between sticky top-0 z-10">
           <div className="flex flex-col">
             <h1 className="text-2xl font-poppins font-extrabold text-gray-900 tracking-tight">Dashboard Overview</h1>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-              Welcome back, <span className="text-green-600">{user?.name}</span> • {user?.department}
-            </p>
           </div>
           
           <div className="flex items-center space-x-6">
@@ -154,16 +168,9 @@ const AdminDashboard = () => {
             </div>
 
             <div className="flex items-center space-x-4 pl-4 border-l border-gray-100">
-              <div className="flex flex-col items-end">
-                <span className="text-sm font-bold text-gray-900">{user?.name}</span>
-                <span className="text-[10px] font-bold text-gray-400 uppercase">{user?.role}</span>
+              <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-gray-200">
+                <img src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`} alt="User Avatar" />
               </div>
-              <div className="h-12 w-12 bg-gradient-to-tr from-green-500 to-emerald-400 text-white rounded-2xl flex items-center justify-center font-black shadow-lg shadow-green-500/30">
-                {user?.name?.charAt(0).toUpperCase()}
-              </div>
-              <button onClick={logout} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all">
-                <LogOut size={20} />
-              </button>
             </div>
           </div>
         </header>
@@ -171,10 +178,10 @@ const AdminDashboard = () => {
         <div className="p-10 space-y-10">
           {/* KPI Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <StatCard label="Pending Approvals" value={data?.stats?.pending_approvals} icon={<Clock className="text-orange-500" />} color="orange" />
-            <StatCard label="On Leave Today" value={data?.stats?.on_leave_today} icon={<Users className="text-blue-500" />} color="blue" />
-            <StatCard label="Upcoming Next Week" value={data?.stats?.upcoming_next_week} icon={<Calendar className="text-green-500" />} color="green" />
-            <StatCard label="Total Capacity" value={data?.stats?.total_capacity + '%'} icon={<AlertTriangle className="text-slate-500" />} color="slate" />
+            <StatCard label="Pending Approvals" value={data?.stats?.pending_approvals} />
+            <StatCard label="On Leave Today" value={data?.stats?.on_leave_today} />
+            <StatCard label="Upcoming Next Week" value={data?.stats?.upcoming_next_week} />
+            <StatCard label="Total Capacity" value={data?.stats?.total_capacity + '%'} />
           </div>
 
           {/* Interactive Toolbar */}
@@ -340,32 +347,51 @@ const AdminDashboard = () => {
 
 // --- Sub-components ---
 
-const NavItem = ({ icon, label, active = false }) => (
-  <a href="#" className={`flex items-center space-x-4 p-4 rounded-2xl transition-all group ${
-    active ? 'bg-green-600/10 text-green-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-  }`}>
-    <div className={`transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
+const SidebarLink = ({ to, icon, label, active = false }) => {
+  const content = (
+    <>
+      <div className={`transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
+        {icon}
+      </div>
+      <span className="font-bold text-sm tracking-wide">{label}</span>
+    </>
+  );
+
+  const baseClasses = `flex items-center space-x-4 px-6 py-4 rounded-xl transition-all group`;
+  const activeClasses = `bg-green-50 text-green-600 border-r-4 border-green-600 rounded-r-none`;
+  const inactiveClasses = `text-gray-400 hover:bg-gray-50 hover:text-gray-900`;
+
+  if (to) {
+    return (
+      <Link to={to} className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}>
+      {content}
+    </button>
+  );
+};
+
+const SecondaryNavLink = ({ icon, label }) => (
+  <button className="w-full flex items-center space-x-4 px-4 py-3 text-gray-400 hover:text-gray-900 transition-colors group">
+    <div className="group-hover:scale-110 transition-transform">
       {icon}
     </div>
-    <span className="font-bold text-sm tracking-wide">{label}</span>
-  </a>
+    <span className="font-bold text-sm">{label}</span>
+  </button>
 );
 
-const StatCard = ({ label, value, icon, color }) => {
-  const colorMap = {
-    orange: 'from-orange-500/10 to-orange-500/5 text-orange-600 border-orange-100/50',
-    blue: 'from-blue-500/10 to-blue-500/5 text-blue-600 border-blue-100/50',
-    green: 'from-green-500/10 to-green-500/5 text-green-600 border-green-100/50',
-    red: 'from-red-500/10 to-red-500/5 text-red-600 border-red-100/50'
-  };
+const StatCard = ({ label, value, icon }) => {
   return (
-    <div className={`p-8 rounded-[32px] border bg-gradient-to-br ${colorMap[color]} shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="p-3 bg-white rounded-2xl shadow-sm">{icon}</div>
-        <div className="h-1.5 w-8 bg-gray-200/50 rounded-full"></div>
+    <div className="p-8 rounded-3xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300">
+      <p className="text-sm font-bold text-gray-400 mb-2">{label}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-5xl font-black text-gray-900 tracking-tighter">{value || 0}</p>
       </div>
-      <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{label}</p>
-      <p className="text-4xl font-black mt-2 tracking-tighter">{value || 0}</p>
     </div>
   );
 };
