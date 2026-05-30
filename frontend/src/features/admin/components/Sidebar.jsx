@@ -31,7 +31,12 @@ const Sidebar = ({ logout }) => {
           active={location.pathname === '/admin/leave-requests'} 
         />
         <SidebarLink icon={<Calendar size={18} />} label="Team Calendar" />
-        <SidebarLink icon={<Users size={18} />} label="Employee Directory" />
+        <SidebarLink 
+          to="/admin/employees" 
+          icon={<Users size={18} />} 
+          label="Employee Directory" 
+          active={location.pathname === '/admin/employees'}
+        />
         <SidebarLink icon={<Settings size={18} />} label="Admin Settings" />
       </nav>
 

@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { 
   Search, Calendar, Download, CheckCircle, 
   Clock, Check, X, ChevronLeft, ChevronRight, MoreHorizontal,
   AlertCircle
 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import PageHeader from '../components/PageHeader';
 
+/**
+ * LeaveRequests - Advanced Management Module
+ */
 const LeaveRequests = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const [requests, setRequests] = useState([]);
   const [meta, setMeta] = useState({});
@@ -150,6 +154,15 @@ const LeaveRequests = () => {
       </span>
     );
   };
+
+  if (loading && requests.length === 0) return (
+    <div className="flex h-screen items-center justify-center bg-white">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <p className="text-sm font-medium text-gray-500 animate-pulse">Loading leave applications...</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex h-screen bg-gray-50/50 overflow-hidden font-montserrat text-gray-900">

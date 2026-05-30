@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell 
 } from 'recharts';
+import { 
+  Filter, Search, Calendar, Clock, Users as UsersIcon, AlertCircle, ChevronRight, Check, X 
+} from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import PageHeader from '../components/PageHeader';
 
@@ -73,7 +77,10 @@ const AdminDashboard = () => {
 
   if (loading && !data) return (
     <div className="flex h-screen items-center justify-center bg-white">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <p className="text-sm font-medium text-gray-500 animate-pulse">Loading dashboard analytics...</p>
+      </div>
     </div>
   );
 
@@ -240,7 +247,7 @@ const AdminDashboard = () => {
             </div>
             
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-              <h3 className="font-semibold text-gray-900 text-lg mb-6 tracking-tight font-poppins">Policy Insights</h3>
+              <h3 className="font-semibold text-gray-900 text-lg mb-6 tracking-tight font-poppins text-red-600">Policy Insights</h3>
               <div className="space-y-4">
                 <PolicyAlert 
                   title="Absence Warning" 
