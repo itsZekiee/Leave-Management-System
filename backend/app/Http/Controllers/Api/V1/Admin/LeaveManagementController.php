@@ -70,7 +70,7 @@ class LeaveManagementController extends Controller
         $request->validate([
             'ids' => 'required|array',
             'ids.*' => 'exists:leave_requests,id',
-            'target_status' => 'required|in:approved,declined,pending'
+            'target_status' => 'required|in:approved,declined,pending,in-process'
         ]);
 
         DB::transaction(function () use ($request) {

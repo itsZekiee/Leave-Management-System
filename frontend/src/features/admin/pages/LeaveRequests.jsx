@@ -5,9 +5,11 @@ import {
   Clock, Check, X, ChevronLeft, ChevronRight, MoreHorizontal,
   AlertCircle, Users, LayoutDashboard, FileText, Settings, LogOut, Menu
 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const LeaveRequests = () => {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [requests, setRequests] = useState([]);
   const [meta, setMeta] = useState({});
   const [loading, setLoading] = useState(true);
@@ -77,12 +79,34 @@ const LeaveRequests = () => {
     }
   };
 
-  const handleExport = () => {
-    const query = new URLSearchParams({
-      start_date: filters.start_date,
-      end_date: filters.end_date
-    }).toString();
-    window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/v1/admin/leave-requests/export?${query}&token=${localStorage.getItem('access_token')}`, '_blank');
+  const handleExport = async () => {
+    try {
+      const query = new URLSearchParams({
+        start_date: filters.start_date,
+        end_date: filters.end_date
+      }).toString();
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/v1/admin/leave-requests/export?${query}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Export failed');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `leave_requests_${filters.start_date || 'all'}_to_${filters.end_date || 'all'}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Failed to export CSV. Please try again.');
+    }
   };
 
   const toggleSelect = (id) => {
@@ -116,8 +140,14 @@ const LeaveRequests = () => {
           </div>
         </div>
         <nav className="flex-1 p-6 space-y-2">
-          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" onClick={() => window.location.href='/admin/dashboard'} />
-          <NavItem icon={<FileText size={20} />} label="Leave Requests" active />
+          <Link to="/admin/dashboard" className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl font-semibold transition-all ${location.pathname === '/admin/dashboard' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}>
+            <LayoutDashboard size={20} />
+            <span>Dashboard</span>
+          </Link>
+          <Link to="/admin/leave-requests" className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl font-semibold transition-all ${location.pathname === '/admin/leave-requests' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}>
+            <FileText size={20} />
+            <span>Leave Requests</span>
+          </Link>
           <NavItem icon={<Users size={20} />} label="Employee Directory" />
           <NavItem icon={<Settings size={20} />} label="Admin Settings" />
         </nav>
@@ -162,6 +192,9 @@ const LeaveRequests = () => {
             <div className="flex items-center space-x-3">
               <button onClick={() => handleBulkUpdate('approved')} className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors">
                 <Check size={16} /> <span>Approve All</span>
+              </button>
+              <button onClick={() => handleBulkUpdate('in-process')} className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors">
+                <Clock size={16} /> <span>Mark In-Process</span>
               </button>
               <button onClick={() => handleBulkUpdate('declined')} className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold transition-colors">
                 <X size={16} /> <span>Reject All</span>

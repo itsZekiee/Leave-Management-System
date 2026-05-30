@@ -7,6 +7,7 @@ import {
   Bell, Search, Filter, Calendar, Check, X, LogOut, 
   Users, Clock, AlertTriangle, FileText, ChevronRight, LayoutDashboard, Settings
 } from 'lucide-react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 /**
  * AdminDashboard - Premium Corporate Overhaul
@@ -14,6 +15,8 @@ import {
  */
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -88,8 +91,14 @@ const AdminDashboard = () => {
           </div>
         </div>
         <nav className="flex-1 p-6 space-y-4 font-montserrat">
-          <NavItem icon={<LayoutDashboard size={20}/>} label="Dashboard" active />
-          <NavItem icon={<FileText size={20} />} label="Leave Requests" onClick={() => window.location.href='/admin/leave-requests'} />
+          <Link to="/admin/dashboard" className={`flex items-center space-x-4 p-4 rounded-2xl transition-all group ${location.pathname === '/admin/dashboard' ? 'bg-green-600/10 text-green-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            <LayoutDashboard size={20}/>
+            <span className="font-bold text-sm tracking-wide">Dashboard</span>
+          </Link>
+          <Link to="/admin/leave-requests" className={`flex items-center space-x-4 p-4 rounded-2xl transition-all group ${location.pathname === '/admin/leave-requests' ? 'bg-green-600/10 text-green-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+            <FileText size={20} />
+            <span className="font-bold text-sm tracking-wide">Leave Requests</span>
+          </Link>
           <NavItem icon={<Users size={20} />} label="Directory" />
           <NavItem icon={<Settings size={20} />} label="Admin Settings" />
         </nav>
