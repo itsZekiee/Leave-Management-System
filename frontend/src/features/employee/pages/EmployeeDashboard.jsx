@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Calendar, Clock, CheckCircle, AlertCircle,
-  ArrowRight, Info, Bell, User as UserIcon, LogOut
+  ArrowRight, Info, Bell, User as UserIcon, LogOut, Shield
 } from 'lucide-react';
 import { useAuth } from '../../auth/hooks/useAuth';
 
@@ -45,7 +45,7 @@ const EmployeeDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-green-600 p-2 rounded-lg text-white">
-              <ShieldIcon size={20} />
+              <Shield size={20} />
             </div>
             <div>
               <h1 className="text-lg font-poppins font-semibold text-gray-900">LMS Employee</h1>

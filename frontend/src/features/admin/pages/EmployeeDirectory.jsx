@@ -4,6 +4,7 @@ import {
   ChevronLeft, ChevronRight, MoreHorizontal,
   Mail, Phone, Calendar as CalendarIcon, CheckCircle2, AlertCircle
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../../auth/hooks/useAuth';
@@ -11,6 +12,7 @@ import ImportSandbox from '../components/ImportSandbox';
 
 const EmployeeDirectory = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [stats, setStats] = useState({ total_workforce: 0, punctuality_rate: 0, avg_leave_balance: 0 });
   const [loading, setLoading] = useState(true);
@@ -136,7 +138,10 @@ const EmployeeDirectory = () => {
               >
                 <FileUp size={20} />
               </button>
-              <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-xs font-semibold shadow-sm flex items-center gap-2 transition-all">
+              <button 
+                onClick={() => navigate('/admin/employees/create')}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-xs font-semibold shadow-sm flex items-center gap-2 transition-all"
+              >
                 <Plus size={16} />
                 <span>Add Employee</span>
               </button>

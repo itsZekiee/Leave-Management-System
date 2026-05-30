@@ -4,6 +4,7 @@ import LoginForm from './features/auth/components/LoginForm';
 import AdminDashboard from './features/admin/pages/AdminDashboard';
 import LeaveRequests from './features/admin/pages/LeaveRequests';
 import EmployeeDirectory from './features/admin/pages/EmployeeDirectory';
+import CreateEmployee from './features/admin/pages/CreateEmployee';
 import EmployeeDashboard from './features/employee/pages/EmployeeDashboard';
 import { useAuth } from './features/auth/hooks/useAuth';
 
@@ -51,6 +52,15 @@ function App() {
           element={
             <ProtectedRoute isAdminRequired={true}>
               <EmployeeDirectory />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/admin/employees/create" 
+          element={
+            <ProtectedRoute isAdminRequired={true}>
+              <CreateEmployee />
             </ProtectedRoute>
           } 
         />
