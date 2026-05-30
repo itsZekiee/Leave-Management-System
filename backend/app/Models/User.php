@@ -13,7 +13,21 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-#[Fillable(['corporate_id', 'name', 'email', 'password', 'role', 'department'])]
+#[Fillable([
+    'corporate_id',
+    'name',
+    'email',
+    'password',
+    'role',
+    'department',
+    'phone',
+    'avatar',
+    'join_date',
+    'position',
+    'attendance_stats',
+    'leave_balance',
+    'status'
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -38,6 +52,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'attendance_stats' => 'array',
+            'join_date' => 'date',
         ];
     }
 }
