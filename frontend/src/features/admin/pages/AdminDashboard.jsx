@@ -11,8 +11,7 @@ import Sidebar from '../components/Sidebar';
 import PageHeader from '../components/PageHeader';
 
 /**
- * AdminDashboard - Premium Corporate Overhaul
- * Redesigned for real-time analytics and dynamic interactions.
+ * AdminDashboard
  */
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
